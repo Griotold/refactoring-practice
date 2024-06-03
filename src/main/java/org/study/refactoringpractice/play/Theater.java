@@ -20,8 +20,6 @@ public class Theater {
 
         for (Performance performance : invoice.getPerformances()) {
 
-            int thisAmount = amountFor(performance);
-
             // 포인트를 적립한다.
             volumeCredits += Math.max(performance.getAudience() - 30, 0);
             // 희극 관객 5명마다 추가 포인트를 제공한다.
@@ -30,9 +28,9 @@ public class Theater {
             }
 
             // 청구 내역을 출력한다.
-            ;
-            result += String.format("%s: %s (%d seats)\n", playFor(performance).getName(), currencyFormatter.format(thisAmount / 100), performance.getAudience());
-            totalAmount += thisAmount;
+
+            result += String.format("%s: %s (%d seats)\n", playFor(performance).getName(), currencyFormatter.format(amountFor(performance) / 100), performance.getAudience());
+            totalAmount += amountFor(performance);
         }
         result += String.format("Total amount: %s\n", currencyFormatter.format(totalAmount / 100));
         result += String.format("You earned: %s points\n", volumeCredits);
