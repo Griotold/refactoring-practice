@@ -13,7 +13,7 @@ public class Theater {
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
         for (Performance performance : invoice.getPerformances()) {
-            Play play = plays.get(performance.getPlayID());
+            Play play = playFor(plays, performance);
             int thisAmount = amountFor(performance, play);
 
             // 포인트를 적립한다.
@@ -34,25 +34,31 @@ public class Theater {
 
     }
 
-    private int amountFor(Performance performance, Play play) {
-        int thisAmount = 0;
+    private static Play playFor(Map<String, Play> plays, Performance performance) {
+        return plays.get(performance.getPlayID());
+    }
+
+    private int amountFor(Performance aPerformance, Play play) {
+        int result = 0;
         switch (play.getType()) {
             case "tragedy": // 비극
-                thisAmount = 40_000;
-                if (performance.getAudience() > 30) {
-                    thisAmount += 1000 * (performance.getAudience() - 30);
+                result = 40_000;
+                if (aPerformance.getAudience() > 30) {
+                    result += 1000 * (aPerformance.getAudience() - 30);
                 }
                 break;
             case "comedy": // 희극
-                thisAmount = 30_000;
-                if (performance.getAudience() > 20) {
-                    thisAmount += 10_000 + 500 * (performance.getAudience() - 20);
+                result = 30_000;
+                if (aPerformance.getAudience() > 20) {
+                    result += 10_000 + 500 * (aPerformance.getAudience() - 20);
                 }
-                thisAmount += 300 * performance.getAudience();
+                result += 300 * aPerformance.getAudience();
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Unknown genre: %s", play.getType()));
         }
-        return thisAmount;
+        return result;
     }
+
+
 }
