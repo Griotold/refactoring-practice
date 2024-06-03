@@ -1,7 +1,6 @@
 package org.study.refactoringpractice.play;
 
 import java.text.NumberFormat;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -35,7 +34,7 @@ public class Theater {
                     throw new IllegalArgumentException(String.format("Unknown genre: %s", play.getType()));
             }
             // 포인트를 적립한다.
-            volumeCredits += Math.max(performance.getAudience() - 30,  0);
+            volumeCredits += Math.max(performance.getAudience() - 30, 0);
             // 희극 관객 5명마다 추가 포인트를 제공한다.
             if ("comedy".equals(play.getType())) {
                 volumeCredits += Math.floor(performance.getAudience() / 5);
