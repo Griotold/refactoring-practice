@@ -13,19 +13,19 @@ public class Theater {
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
         for (Performance performance : invoice.getPerformances()) {
-            Play play = playFor(plays, performance);
-            int thisAmount = amountFor(performance, play);
+
+            int thisAmount = amountFor(performance, playFor(plays, performance));
 
             // 포인트를 적립한다.
             volumeCredits += Math.max(performance.getAudience() - 30, 0);
             // 희극 관객 5명마다 추가 포인트를 제공한다.
-            if ("comedy".equals(play.getType())) {
+            if ("comedy".equals(playFor(plays, performance).getType())) {
                 volumeCredits += Math.floor(performance.getAudience() / 5);
             }
 
             // 청구 내역을 출력한다.
             ;
-            result += String.format("%s: %s (%d seats)\n", play.getName(), currencyFormatter.format(thisAmount / 100), performance.getAudience());
+            result += String.format("%s: %s (%d seats)\n", playFor(plays, performance).getName(), currencyFormatter.format(thisAmount / 100), performance.getAudience());
             totalAmount += thisAmount;
         }
         result += String.format("Total amount: %s\n", currencyFormatter.format(totalAmount / 100));
