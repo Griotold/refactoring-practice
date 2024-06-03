@@ -1,13 +1,12 @@
 package org.study.refactoringpractice.play;
 
 import java.text.NumberFormat;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 public class Theater {
 
-    private Map<String, Play> plays = new HashMap<String, Play>();
+    private Map<String, Play> plays;
 
     public Theater(Map<String, Play> plays) {
         this.plays = plays;
@@ -21,7 +20,7 @@ public class Theater {
 
         for (Performance performance : invoice.getPerformances()) {
 
-            int thisAmount = amountFor(performance, playFor(performance));
+            int thisAmount = amountFor(performance);
 
             // 포인트를 적립한다.
             volumeCredits += Math.max(performance.getAudience() - 30, 0);
@@ -41,11 +40,11 @@ public class Theater {
 
     }
 
-    private Play playFor(Performance performance) {
-        return plays.get(performance.getPlayID());
+    private Play playFor(Performance aPerformance) {
+        return plays.get(aPerformance.getPlayID());
     }
 
-    private int amountFor(Performance aPerformance, Play play) {
+    private int amountFor(Performance aPerformance) {
         int result = 0;
         switch (playFor(aPerformance).getType()) {
             case "tragedy": // 비극
@@ -62,7 +61,7 @@ public class Theater {
                 result += 300 * aPerformance.getAudience();
                 break;
             default:
-                throw new IllegalArgumentException(String.format("Unknown genre: %s", play.getType()));
+                throw new IllegalArgumentException(String.format("Unknown genre: %s", playFor(aPerformance).getType()));
         }
         return result;
     }
