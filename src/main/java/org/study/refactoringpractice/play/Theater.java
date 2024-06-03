@@ -14,25 +14,8 @@ public class Theater {
 
         for (Performance performance : invoice.getPerformances()) {
             Play play = plays.get(performance.getPlayID());
-            int thisAmount = 0;
+            int thisAmount = amountFor(performance, play);
 
-            switch (play.getType()) {
-                case "tragedy": // 비극
-                    thisAmount = 40_000;
-                    if (performance.getAudience() > 30) {
-                        thisAmount += 1000 * (performance.getAudience() - 30);
-                    }
-                    break;
-                case "comedy": // 희극
-                    thisAmount = 30_000;
-                    if (performance.getAudience() > 20) {
-                        thisAmount += 10_000 + 500 * (performance.getAudience() - 20);
-                    }
-                    thisAmount += 300 * performance.getAudience();
-                    break;
-                default:
-                    throw new IllegalArgumentException(String.format("Unknown genre: %s", play.getType()));
-            }
             // 포인트를 적립한다.
             volumeCredits += Math.max(performance.getAudience() - 30, 0);
             // 희극 관객 5명마다 추가 포인트를 제공한다.
@@ -49,5 +32,27 @@ public class Theater {
         result += String.format("You earned: %s points\n", volumeCredits);
         return result;
 
+    }
+
+    private int amountFor(Performance performance, Play play) {
+        int thisAmount = 0;
+        switch (play.getType()) {
+            case "tragedy": // 비극
+                thisAmount = 40_000;
+                if (performance.getAudience() > 30) {
+                    thisAmount += 1000 * (performance.getAudience() - 30);
+                }
+                break;
+            case "comedy": // 희극
+                thisAmount = 30_000;
+                if (performance.getAudience() > 20) {
+                    thisAmount += 10_000 + 500 * (performance.getAudience() - 20);
+                }
+                thisAmount += 300 * performance.getAudience();
+                break;
+            default:
+                throw new IllegalArgumentException(String.format("Unknown genre: %s", play.getType()));
+        }
+        return thisAmount;
     }
 }
