@@ -6,7 +6,6 @@ import java.util.Map;
 public class PlayMain {
 
     public static void main(String[] args) {
-        Theater theater = new Theater();
 
         Play hamlet = new Play("hamlet", "Hamlet", "tragedy");
         Play asYouLikeIt = new Play("as-like", "As You Like It", "comedy");
@@ -22,10 +21,12 @@ public class PlayMain {
                 "othello", othello
         );
 
+        Theater theater = new Theater(plays);
+
         Invoice invoice = new Invoice("BigCo",
                 List.of(hamletPerformance, asYouLikeItPerformance, othelloPerformance));
 
-        String result = theater.statement(invoice, plays);
+        String result = theater.statement(invoice);
         System.out.println(result);
     }
 }

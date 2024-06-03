@@ -15,26 +15,24 @@ class TheaterTest {
 
     @BeforeEach
     void setUp() {
-        theater = new Theater();
+        Play hamlet = new Play("hamlet", "Hamlet", "tragedy");
+        Play asYouLikeIt = new Play("as-like", "As You Like It", "comedy");
+        Play othello = new Play("othello", "Othello", "tragedy");
+        Map<String, Play> plays = Map.of(
+                "hamlet", hamlet,
+                "as-like", asYouLikeIt,
+                "othello", othello
+        );
+        theater = new Theater(plays);
     }
 
     @DisplayName("원하는 문자열이 출력되는 자가진단 테스트")
     @Test
     void testOne() {
         // Given
-        Play hamlet = new Play("hamlet", "Hamlet", "tragedy");
-        Play asYouLikeIt = new Play("as-like", "As You Like It", "comedy");
-        Play othello = new Play("othello", "Othello", "tragedy");
-
         Performance hamletPerformance = new Performance("hamlet", 55);
         Performance asYouLikeItPerformance = new Performance("as-like", 35);
         Performance othelloPerformance = new Performance("othello", 40);
-
-        Map<String, Play> plays = Map.of(
-                "hamlet", hamlet,
-                "as-like", asYouLikeIt,
-                "othello", othello
-        );
 
         String customerName = "BigCo";
 
@@ -42,7 +40,7 @@ class TheaterTest {
                 List.of(hamletPerformance, asYouLikeItPerformance, othelloPerformance));
 
         // When
-        String result = theater.statement(invoice, plays);
+        String result = theater.statement(invoice);
         String expected = "statement for (customer: BigCo)\n" +
                 "Hamlet: $650.00 (55 seats)\n" +
                 "As You Like It: $580.00 (35 seats)\n" +

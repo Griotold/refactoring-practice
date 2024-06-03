@@ -1,12 +1,19 @@
 package org.study.refactoringpractice.play;
 
 import java.text.NumberFormat;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 public class Theater {
 
-    public String statement(Invoice invoice, Map<String, Play> plays) {
+    private Map<String, Play> plays = new HashMap<String, Play>();
+
+    public Theater(Map<String, Play> plays) {
+        this.plays = plays;
+    }
+
+    public String statement(Invoice invoice) {
         int totalAmount = 0;
         int volumeCredits = 0;
         String result = String.format("statement for (customer: %s)\n", invoice.getCustomerName());
@@ -14,18 +21,18 @@ public class Theater {
 
         for (Performance performance : invoice.getPerformances()) {
 
-            int thisAmount = amountFor(performance, playFor(plays, performance));
+            int thisAmount = amountFor(performance, playFor(performance));
 
             // 포인트를 적립한다.
             volumeCredits += Math.max(performance.getAudience() - 30, 0);
             // 희극 관객 5명마다 추가 포인트를 제공한다.
-            if ("comedy".equals(playFor(plays, performance).getType())) {
+            if ("comedy".equals(playFor(performance).getType())) {
                 volumeCredits += Math.floor(performance.getAudience() / 5);
             }
 
             // 청구 내역을 출력한다.
             ;
-            result += String.format("%s: %s (%d seats)\n", playFor(plays, performance).getName(), currencyFormatter.format(thisAmount / 100), performance.getAudience());
+            result += String.format("%s: %s (%d seats)\n", playFor(performance).getName(), currencyFormatter.format(thisAmount / 100), performance.getAudience());
             totalAmount += thisAmount;
         }
         result += String.format("Total amount: %s\n", currencyFormatter.format(totalAmount / 100));
@@ -34,13 +41,13 @@ public class Theater {
 
     }
 
-    private static Play playFor(Map<String, Play> plays, Performance performance) {
+    private Play playFor(Performance performance) {
         return plays.get(performance.getPlayID());
     }
 
     private int amountFor(Performance aPerformance, Play play) {
         int result = 0;
-        switch (play.getType()) {
+        switch (playFor(aPerformance).getType()) {
             case "tragedy": // 비극
                 result = 40_000;
                 if (aPerformance.getAudience() > 30) {
